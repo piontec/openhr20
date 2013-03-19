@@ -1,0 +1,53 @@
+#!/bin/sh /etc/rc.common
+# OpenHR20 init script
+# Copyright (C) 2013  piontec
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+
+START=96
+BIN=/opt/usr/bin/php-cli
+ARGS=/home/root/frontend/tools/daemon.php
+PID=/var/run/openhr20.pid
+PORT=/dev/ttyUSB0
+BACKUP_DIR=/home/root/openhr20_backup/
+
+start() {
+	# bring back backup files
+	if [ -d $BACKUP_DIR ]; then
+		if [ ! -d /tmp/openhr20/ ]; then
+			mkdir /tmp/openhr20
+		fi
+        	cp -a $BACKUP_DIR/*.rrd /tmp/openhr20/
+	fi
+
+	if [ -f $BACKUP_DIR/openhr20.sqlite ]; then
+        	cp $BACKUP_DIR/openhr20.sqlite /tmp/
+	fi
+
+	# set port and start daemon
+	/usr/bin/stty -F $PORT 38400
+	start-stop-daemon -S -x $BIN -p $PID -m -b -S -- $ARGS
+	echo "OpenHR20 daemon started"
+}
+
+stop() {
+	# shut down daemon
+	start-stop-daemon -K -p $PID -s TERM && rm -rf $PID
+
+	# backup files
+	if [ -d /tmp/openhr20 ]; then
+		cp -a /tmp/openhr20/*.rrd $BACKUP_DIR
+	fi
+
+	if [ -f /tmp/openhr20.sqlite ]; then
+		cp /tmp/openhr20.sqlite $BACKUP_DIR
+	fi 
+
+	echo "OpenHR20 daemon stopped"
+}
+
+
+restart() {
+	stop; sleep 5; start
+}
+

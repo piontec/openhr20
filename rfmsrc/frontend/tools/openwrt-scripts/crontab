@@ -1,0 +1,5 @@
+*/45 */2 * * *  /opt/scripts/backup-rrd
+*/15 * * * * /home/root/frontend/tools/plot 3
+@hourly /home/root/frontend/tools/plot 7
+0 4 * * * /home/root/frontend/tools/plot 30
+0 5 * * * /home/root/frontend/tools/plot 90
