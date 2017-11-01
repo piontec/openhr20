@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenHR20 service
+After=syslog.target
+
+[Service]
+WorkingDirectory=/srv/openhr20/rfmsrc/frontend/tools
+ExecStartPre=/bin/stty -F /dev/ttyUSB0 38400
+ExecStartPre=/opt/scripts/pre-start_openhr20.sh
+ExecStart=/usr/bin/php daemon.php 
+Restart=on-abort
+ExecStopPost=/opt/scripts/pre-stop_openhr20.sh
+
+[Install]
+WantedBy=multi-user.target
