@@ -1,8 +1,12 @@
 <?php
+// requires apt-get install php5-curl
 
 // config part
 $RRD_HOME="/tmp/openhr20/";
 $TIMEZONE="Europe/Warsaw";
+$ENVO_IDS = array("10"=>"GUID", "11"=>"GUID", "12"=>"GUID");
+$url = "https://enpoint";
+
 
 // NOTE: this file is hudge dirty hack, will be rewriteln
 echo "OpenHR20 PHP Daemon\n";
@@ -220,6 +224,37 @@ while(($line=fgets($fp,256))!==FALSE) {
         		echo $cmnd."\n";
 			system($cmnd); 
 		}
+		//echo "^^^real=".$addr$val["real"];
+		//echo "^^^valve=".$addr["valve"];
+		//echo "^^^error=".$addr["error"];
+		//echo "^^^force=".$addr["force"];
+		//echo "^^^window=".$addr["window"];
+		$err = $st['error'] === NULL || empty($st['error']) ? "0" : $st['error'];
+		$fce = $st['force'] === NULL || empty($st['force']) ? "0" : $st['force'];
+		$win = $st['window'] === NULL || empty($st['window']) ? "0" : $st['window'];
+		$temp = (float)$st['real'] / 100.0;
+		$wntd = (float)$st['wanted'] / 100.0;
+		$vol = (float)$st['battery'] / 1000.0;
+		$envo = $ENVO_IDS[$addr]." "."ohr20-".$addr."\ntemp=".$temp.",wanted=".$wntd.",valve=".$st['valve'].",vol=".$vol.",window=".$win.",error=".$err.",force=".$fce."\n";
+		$headers = array(
+			'Content-Type: text/plain; charset=UTF-8',
+			'Content-Length: '.strlen($envo)
+		);
+		echo "***\n";
+		foreach ($headers as $h) {
+			echo $h."\n";
+		}
+		echo "\n";
+		echo $envo;
+		$req = curl_init($url);
+		curl_setopt($req, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+		curl_setopt($req, CURLOPT_POSTFIELDS, $envo);                                                                  
+		curl_setopt($req, CURLOPT_RETURNTRANSFER, true);                                                                      
+		curl_setopt($req, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($req, CURLOPT_SAFE_UPLOAD, false);
+		$resp = curl_exec($req);
+		curl_close($req);
+		echo ">>>".$resp."\n";
     	  }
     	}
     }
