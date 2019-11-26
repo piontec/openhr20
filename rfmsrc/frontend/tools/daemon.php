@@ -4,8 +4,8 @@
 // config part
 $RRD_HOME="/tmp/openhr20/";
 $TIMEZONE="Europe/Warsaw";
-$ENVO_IDS = array("10"=>"GUID", "11"=>"GUID", "12"=>"GUID");
-$url = "https://enpoint";
+$ENVO_IDS = array("10"=>"56a6a4d3-5ea4-477b-a43f-c9e2f7a21110", "11"=>"56a6a4d3-5ea4-477b-a43f-c9e2f7a21111", "12"=>"56a6a4d3-5ea4-477b-a43f-c9e2f7a21112");
+$url = "https://api.envosense.tailored.cloud/api/measurement";
 
 
 // NOTE: this file is hudge dirty hack, will be rewriteln
@@ -221,14 +221,14 @@ while(($line=fgets($fp,256))!==FALSE) {
 		$rrd_file = $RRD_HOME."/openhr20_".$addr.".rrd";
 		if (file_exists ($rrd_file)) {
         		$cmnd = "rrdtool update ".$rrd_file." ".$time.":".(int)$st['real'].":".(int)$st['wanted'].":".(int)$st['valve'].":".(int)$st['window'];
-        		echo $cmnd."\n";
+        		//echo $cmnd."\n";
 			system($cmnd); 
 		}
-		//echo "^^^real=".$addr$val["real"];
-		//echo "^^^valve=".$addr["valve"];
-		//echo "^^^error=".$addr["error"];
-		//echo "^^^force=".$addr["force"];
-		//echo "^^^window=".$addr["window"];
+		//echo "^^^ real=".$st["real"];
+		//echo "^^^valve=".$st["valve"];
+		//echo "^^^error=".$st["error"];
+		//echo "^^^force=".$st["force"];
+		//echo "^^^window=".$st["window"];
 		$err = $st['error'] === NULL || empty($st['error']) ? "0" : $st['error'];
 		$fce = $st['force'] === NULL || empty($st['force']) ? "0" : $st['force'];
 		$win = $st['window'] === NULL || empty($st['window']) ? "0" : $st['window'];
@@ -240,21 +240,22 @@ while(($line=fgets($fp,256))!==FALSE) {
 			'Content-Type: text/plain; charset=UTF-8',
 			'Content-Length: '.strlen($envo)
 		);
-		echo "***\n";
-		foreach ($headers as $h) {
-			echo $h."\n";
-		}
-		echo "\n";
-		echo $envo;
+		//echo "***\n";
+		//foreach ($headers as $h) {
+		//	echo $h."\n";
+		//}
+		//echo "\n";
+		//echo $envo;
 		$req = curl_init($url);
-		curl_setopt($req, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-		curl_setopt($req, CURLOPT_POSTFIELDS, $envo);                                                                  
-		curl_setopt($req, CURLOPT_RETURNTRANSFER, true);                                                                      
+		curl_setopt($req, CURLOPT_POST, true);
+		curl_setopt($req, CURLOPT_POSTFIELDS, $envo);
+		curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($req, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($req, CURLOPT_SAFE_UPLOAD, false);
+		//curl_setopt($req, CURLOPT_VERBOSE, true);
+		//curl_setopt($req, CURLOPT_SAFE_UPLOAD, false);
 		$resp = curl_exec($req);
 		curl_close($req);
-		echo ">>>".$resp."\n";
+		//echo ">>>".$resp."\n";
     	  }
     	}
     }
