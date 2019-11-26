@@ -1,6 +1,6 @@
-#!/bin/sh /etc/rc.common
+#!/bin/sh
 
-BACKUP_DIR=/root/openhr20_backup/
+BACKUP_DIR=/srv/openhr20_backup/
 
 # backup files
 if [ -d /tmp/openhr20 ]; then

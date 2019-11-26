@@ -3,12 +3,14 @@ Description=OpenHR20 service
 After=syslog.target
 
 [Service]
+User=www-data
 WorkingDirectory=/srv/openhr20/rfmsrc/frontend/tools
 ExecStartPre=/bin/stty -F /dev/ttyUSB0 38400
-ExecStartPre=/opt/scripts/pre-start_openhr20.sh
+ExecStartPre=/srv/openhr20/rfmsrc/frontend/tools/openwrt-scripts/systemd/pre-start_openhr20.sh
 ExecStart=/usr/bin/php daemon.php 
-Restart=on-abort
-ExecStopPost=/opt/scripts/pre-stop_openhr20.sh
+ExecStopPost=/srv/openhr20/rfmsrc/frontend/tools/openwrt-scripts/systemd/pre-stop_openhr20.sh
+Restart=always
+RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
