@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # config part
-RRD_HOME=/tmp/openhr20/
+RRD_HOME=/srv/openhr20-data/openhr20/
 IDS="10 11 12"
 PLOTS="${RRD_HOME}/plots"
 

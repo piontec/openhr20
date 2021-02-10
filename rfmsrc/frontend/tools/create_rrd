@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # config part
-RRD_HOME=/tmp/openhr20/
+RRD_HOME=/srv/openhr20-data/openhr20/
 
 # exec part
 if [ $# -ne 1 ]; then

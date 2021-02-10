@@ -1,4 +1,4 @@
-#!/bin/sh /etc/rc.common
+#!/bin/sh
 
 BACKUP_DIR=/root/openhr20_backup/
 

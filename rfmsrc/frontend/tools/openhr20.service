@@ -1,0 +1,19 @@
+[Unit]
+Description=OpenHR20 service
+After=syslog.target log2ram.service
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/openhr20/rfmsrc/frontend/tools
+ExecStartPre=/bin/stty -F /dev/ttyUSB1 38400
+#ExecStartPre=/opt/scripts/pre-start_openhr20.sh
+#ExecStart=/usr/bin/php daemon.php 
+ExecStart=/srv/openhr20/rfmsrc/frontend/tools/openhr20-daemon.sh
+NotifyAccess=all
+Restart=on-failure
+RestartSec=1
+WatchdogSec=60
+#ExecStopPost=/opt/scripts/pre-stop_openhr20.sh
+
+[Install]
+WantedBy=multi-user.target

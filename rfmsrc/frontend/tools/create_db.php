@@ -2,7 +2,7 @@
 
 //unlink ("/usb/home/db.sqlite");
 
-$db = new SQLite3("/tmp/openhr20.sqlite");
+$db = new SQLite3("/srv/openhr20-data/openhr20.sqlite");
 $db->query("PRAGMA synchronous=OFF");
 
 // ************************************************************
